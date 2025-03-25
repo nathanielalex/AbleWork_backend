@@ -5,6 +5,10 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
   companyAddress: {
     type: String,
     required: true,
@@ -38,6 +42,17 @@ companySchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
+
+companySchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+//compare password
+companySchema.methods.matchPassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 const Company = mongoose.model("Company", companySchema);
 
