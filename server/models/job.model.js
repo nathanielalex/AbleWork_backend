@@ -1,37 +1,55 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true, 
+  companyId: {
+    type: Schema.Types.ObjectId,
+    ref: "Company",
+    required: true,
   },
-  postedAt: {
-    type: Date,
-    required: true, 
-  },
-  location: {
+  jobTitle: {
     type: String,
     required: true,
   },
-  salary: {
+  jobDescription: {
     type: String,
-    required: true, 
+    required: true,
   },
-  description: {
+  jobRequirements: {
     type: String,
-    required: true, 
+    required: true,
   },
-  requiredSkills: {
-    type: [String],
-    required: true, 
+  salaryRange: {
+    type: String,
+    required: true,
   },
-  isActive: {
+  jobLocation: {
+    type: String,
+    required: true,
+  },
+  jobTypeId: {
+    type: Schema.Types.ObjectId,
+    ref: "JobType",
+    required: true,
+  },
+  disabilitiesFriendly: {
     type: Boolean,
-    default: true,
-    required: true,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-const Job = mongoose.model('Job', jobSchema);
+//to set `updatedAt` to current time before saving
+jobSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
+const Job = mongoose.model("Job", jobSchema);
 export default Job;

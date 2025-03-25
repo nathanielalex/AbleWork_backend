@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import Job from "../models/job.model.js"; 
-
+import Job from "../models/job.model.js";
 
 export const getJobs = async (req, res) => {
   try {
@@ -14,7 +13,7 @@ export const getJobs = async (req, res) => {
 
 export const getCurrentJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ isActive: true }); 
+    const jobs = await Job.find({ isActive: true });
     res.status(200).json({ success: true, data: jobs });
   } catch (error) {
     console.error("Error in fetching jobs: ", error.message);
@@ -22,12 +21,11 @@ export const getCurrentJobs = async (req, res) => {
   }
 };
 
-
 export const getJobById = async (req, res) => {
   try {
-    const jobId = req.params.id;  
-    const job = await Job.findById(jobId); 
-    
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+
     if (!job) {
       return res.status(404).json({ success: false, message: "Job not found" });
     }
@@ -39,12 +37,22 @@ export const getJobById = async (req, res) => {
   }
 };
 
-
 export const createJob = async (req, res) => {
   const job = req.body;
 
-  if (!job.title || !job.postedAt || !job.location || !job.salary || !job.description || !job.requiredSkills) {
-    return res.status(400).json({ success: false, message: "Please provide all required fields" });
+  if (
+    !job.jobTitle ||
+    !job.jobLocation ||
+    !job.salaryRange ||
+    !job.jobDescription ||
+    !job.jobRequirements ||
+    !job.jobTypeId ||
+    !job.disabilitiesFriendly ||
+    !job.companyId
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Please provide all required fields" });
   }
 
   const newJob = new Job(job);
@@ -90,4 +98,3 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
