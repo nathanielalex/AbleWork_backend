@@ -5,18 +5,25 @@ import {
   updateJob,
   createJob,
   getJobById,
-  getCurrentJobs,
+  getJobsWithCompany
 } from "../controllers/job.controller.js";
+import { protect } from "../middleware/protect.js";
 
 const router = express.Router();
 
 router.get("/", getJobs);
 
-router.get("/current", getCurrentJobs);
+router.get("/companies", getJobsWithCompany);
+
+// router.get("/current", getCurrentJobs);
 
 router.get("/:id", getJobById);
-    
+
 router.post("/", createJob);
+
+// router.post("/", protect, (req, res) => {
+//   createJob(req, res);
+// });
 
 router.delete("/:id", deleteJob);
 

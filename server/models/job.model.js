@@ -26,9 +26,8 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  jobTypeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "JobType",
+  jobType: {
+    type: String,
     required: true,
   },
   disabilitiesFriendly: {

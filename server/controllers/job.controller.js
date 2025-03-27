@@ -11,15 +11,42 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const getCurrentJobs = async (req, res) => {
+export const getJobsWithCompany = async (req, res) => {
   try {
-    const jobs = await Job.find({ isActive: true });
-    res.status(200).json({ success: true, data: jobs });
+    const jobsWithCompanies = await Job.aggregate([
+      {
+        $lookup: {
+          from: "companies",
+          localField: "companyId",
+          foreignField: "_id",
+          as: "companyDetails"
+        }
+      },
+      {
+        $unwind: "$companyDetails"
+      },
+      {
+        $project: {
+          "companyDetails.password": 0  //exclude password
+        }
+      }
+    ]);
+    res.json(jobsWithCompanies);
   } catch (error) {
-    console.error("Error in fetching jobs: ", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ error: error.message });
   }
 };
+
+
+// export const getCurrentJobs = async (req, res) => {
+//   try {
+//     const jobs = await Job.find({ isActive: true });
+//     res.status(200).json({ success: true, data: jobs });
+//   } catch (error) {
+//     console.error("Error in fetching jobs: ", error.message);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// };
 
 export const getJobById = async (req, res) => {
   try {
@@ -46,7 +73,7 @@ export const createJob = async (req, res) => {
     !job.salaryRange ||
     !job.jobDescription ||
     !job.jobRequirements ||
-    !job.jobTypeId ||
+    !job.jobType ||
     !job.disabilitiesFriendly ||
     !job.companyId
   ) {
