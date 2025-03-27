@@ -124,7 +124,7 @@ export const registerCompany = async (req, res) => {
         .json({ message: "Company with this email already exists." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const newCompany = new Company({
       companyName,
@@ -133,7 +133,7 @@ export const registerCompany = async (req, res) => {
       companyEmail,
       industryType,
       companyWebsite,
-      password: hashedPassword,
+      password,
     });
 
     await newCompany.save();
@@ -159,9 +159,8 @@ export const loginCompany = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const company = await Company.findOne({ email });
-    if (!company)
-      return res.status(400).json({ message: "Invalid credentials" });
+    const company = await Company.findOne({ companyEmail: email });
+    if (!company) return res.status(400).json({ message: "wrong credentials" });
 
     const isMatch = await company.matchPassword(password);
     if (!isMatch)
