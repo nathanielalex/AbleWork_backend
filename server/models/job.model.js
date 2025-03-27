@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
   companyId: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Company",
     required: true,
   },
@@ -27,7 +27,7 @@ const jobSchema = new mongoose.Schema({
     required: true,
   },
   jobTypeId: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "JobType",
     required: true,
   },

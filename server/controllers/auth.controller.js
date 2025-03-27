@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import Company from "../models/company.model.js";
+import bcrypt from "bcryptjs";
 
 export const registerUser = async (req, res) => {
   try {
@@ -14,7 +15,6 @@ export const registerUser = async (req, res) => {
       gender,
       address,
       profilePicture,
-      role,
     } = req.body;
 
     if (
@@ -49,7 +49,7 @@ export const registerUser = async (req, res) => {
       gender,
       address,
       profilePicture,
-      role,
+      role: "user",
     });
 
     await newUser.save();
