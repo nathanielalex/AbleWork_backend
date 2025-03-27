@@ -37,14 +37,14 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email is already registered." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       firstName,
       lastName,
       email,
       phoneNumber,
-      password: hashedPassword,
+      password,
       dateOfBirth,
       gender,
       address,
@@ -76,14 +76,15 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body); // This should log the incoming data
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) return res.status(400).json({ message: "not found" });
 
     const isMatch = await user.matchPassword(password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+    console.log("Password Match:", isMatch);
+    if (!isMatch) return res.status(400).json({ message: "wrong credentials" });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
