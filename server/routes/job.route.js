@@ -5,7 +5,8 @@ import {
   updateJob,
   createJob,
   getJobById,
-  getJobsWithCompany
+  getJobsWithCompany,
+  getJobByIdWithCompany
 } from "../controllers/job.controller.js";
 import { protect } from "../middleware/protect.js";
 
@@ -18,6 +19,7 @@ router.get("/companies", getJobsWithCompany);
 // router.get("/current", getCurrentJobs);
 
 router.get("/:id", getJobById);
+router.get("/companies/:id", getJobByIdWithCompany);
 
 router.post("/", createJob);
 

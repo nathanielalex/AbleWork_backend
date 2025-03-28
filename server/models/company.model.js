@@ -28,6 +28,9 @@ const companySchema = new mongoose.Schema({
   companyWebsite: {
     type: String,
   },
+  companyPicture: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

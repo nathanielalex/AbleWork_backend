@@ -103,6 +103,7 @@ export const registerCompany = async (req, res) => {
       industryType,
       companyWebsite,
       password,
+      companyPicture
     } = req.body;
 
     if (
@@ -134,6 +135,7 @@ export const registerCompany = async (req, res) => {
       industryType,
       companyWebsite,
       password,
+      companyPicture
     });
 
     await newCompany.save();

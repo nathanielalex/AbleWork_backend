@@ -37,6 +37,47 @@ export const getJobsWithCompany = async (req, res) => {
   }
 };
 
+export const getJobByIdWithCompany = async (req, res) => {
+  // console.log("fetching")
+  try {
+    const id = req.params.id; // Get the jobId from request parameters
+    // console.log(jobId)
+    const jobId = new mongoose.Types.ObjectId(id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid job ID format" });
+    }
+    const jobWithCompany = await Job.aggregate([
+      {
+        $match: { _id: jobId } // Match the job by its ID
+      },
+      {
+        $lookup: {
+          from: "companies",
+          localField: "companyId",
+          foreignField: "_id",
+          as: "companyDetails"
+        }
+      },
+      {
+        $unwind: "$companyDetails"
+      },
+      {
+        $project: {
+          "companyDetails.password": 0
+        }
+      }
+    ]);
+
+    if (jobWithCompany.length === 0) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    res.json(jobWithCompany[0]); 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 // export const getCurrentJobs = async (req, res) => {
 //   try {
