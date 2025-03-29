@@ -6,7 +6,8 @@ import {
   createJob,
   getJobById,
   getJobsWithCompany,
-  getJobByIdWithCompany
+  getJobByIdWithCompany,
+  getJobsByCompany
 } from "../controllers/job.controller.js";
 import { protect } from "../middleware/protect.js";
 
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/", getJobs);
 
 router.get("/companies", getJobsWithCompany);
+router.get("/company/:id", getJobsByCompany);
 
 // router.get("/current", getCurrentJobs);
 

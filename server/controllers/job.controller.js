@@ -38,17 +38,15 @@ export const getJobsWithCompany = async (req, res) => {
 };
 
 export const getJobByIdWithCompany = async (req, res) => {
-  // console.log("fetching")
   try {
-    const id = req.params.id; // Get the jobId from request parameters
-    // console.log(jobId)
+    const id = req.params.id;
     const jobId = new mongoose.Types.ObjectId(id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid job ID format" });
     }
     const jobWithCompany = await Job.aggregate([
       {
-        $match: { _id: jobId } // Match the job by its ID
+        $match: { _id: jobId }
       },
       {
         $lookup: {
@@ -73,6 +71,43 @@ export const getJobByIdWithCompany = async (req, res) => {
     }
 
     res.json(jobWithCompany[0]); 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getJobsByCompany = async (req, res) => {
+  try {
+    // const id = req.params.id; // Get the jobId from request parameters
+    // console.log(jobId)
+    const companyId = req.params.id; //as url parameter
+    const mongoId = new mongoose.Types.ObjectId(companyId);
+    
+    const jobsWithCompanies = await Job.aggregate([
+      {
+        $match: {
+          companyId: mongoId
+        }
+      },
+      {
+        $lookup: {
+          from: "companies",
+          localField: "companyId",
+          foreignField: "_id",
+          as: "companyDetails"
+        }
+      },
+      {
+        $unwind: "$companyDetails"
+      },
+      {
+        $project: {
+          "companyDetails.password": 0  // Exclude password
+        }
+      }
+    ]);
+
+    res.json(jobsWithCompanies);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
