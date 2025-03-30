@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import Company from "../models/company.model.js";
 import bcrypt from "bcryptjs";
+import UserDetail from "../models/userDetail.model.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -53,6 +54,14 @@ export const registerUser = async (req, res) => {
     });
 
     await newUser.save();
+
+    const userDetail = new UserDetail({
+      userId: newUser._id,
+      skills: [],
+      CV: 'CV not provided',
+    });
+
+    await userDetail.save();
 
     res.status(201).json({
       message: "User registered successfully.",

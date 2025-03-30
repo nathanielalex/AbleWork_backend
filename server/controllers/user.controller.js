@@ -32,7 +32,7 @@ export const updateUser = async (req, res) => {
 };
 
 
-export const getUserDetails = async (req, res) => {
+export const getUserByID = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId).select('-password');

@@ -6,7 +6,7 @@ const userDetailSchema = new mongoose.Schema({
     required: true,
     ref: 'User' 
   },
-  skill: {
+  skills: {
     type: [String], 
     required: true
   },
