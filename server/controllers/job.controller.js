@@ -206,16 +206,19 @@ export const deleteJob = async (req, res) => {
 
 const getAllJobRequirements = async () => {
   try {
-    const jobs = await Job.find({}).select('jobRequirements');
-    const jobRequirements = jobs.map(job => job.jobRequirements).flat();
-    return jobRequirements; // Return the data instead of sending a response
+    const jobs = await Job.find({}).select('_id jobRequirements');
+    const jobDetails = jobs.map(job => ({
+      job_id: job._id, 
+      requirement: job.jobRequirements
+    }));
+    return jobDetails;
   } catch (error) {
     console.error("Error in fetching jobs: ", error.message);
     throw new Error("Server error");
   }
 };
 
-//blm testing
+
 const getUserSkills = async (userId) => {
   try {
     const user = await UserDetail.findOne({ userId: userId }).select('skills');
@@ -255,3 +258,26 @@ export const getRecommendedJobs = async (req, res) => {
     });
   }
 };
+
+export const getJobsById = async (req, res) => {
+  try {
+    //list of ids
+    const jobIds = req.body.jobIds
+
+    if (!Array.isArray(jobIds) || jobIds.length === 0) {
+      return res.status(400).json({ success: false, message: "Please provide a valid list of jobIds." });
+    }
+
+    const jobs = await Job.find({ _id: { $in: jobIds } });
+
+    if (jobs.length === 0) {
+      return res.status(404).json({ success: false, message: "No jobs found for the given jobIds." });
+    }
+
+    res.status(200).json({ success: true, data: jobs });
+  } catch (error) {
+    console.error("Error in fetching jobs: ", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+

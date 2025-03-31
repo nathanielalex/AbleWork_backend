@@ -8,7 +8,8 @@ import {
   getJobsWithCompany,
   getJobByIdWithCompany,
   getJobsByCompany,
-  getRecommendedJobs
+  getRecommendedJobs,
+  getJobsById
 } from "../controllers/job.controller.js";
 import { protect } from "../middleware/protect.js";
 
@@ -24,6 +25,7 @@ router.get("/company/:id", getJobsByCompany);
 // router.get("/current", getCurrentJobs);
 
 router.get("/:id", getJobById);
+router.post("/multiple", getJobsById);
 router.get("/companies/:id", getJobByIdWithCompany);
 
 router.post("/", createJob);
