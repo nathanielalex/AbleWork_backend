@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import Job from "../models/job.model.js";
+import UserDetail from "../models/userDetail.model.js";
+import axios from "axios";
 
 export const getJobs = async (req, res) => {
   try {
@@ -199,5 +201,57 @@ export const deleteJob = async (req, res) => {
   } catch (error) {
     console.error("Error in deleting job: ", error.message);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+const getAllJobRequirements = async () => {
+  try {
+    const jobs = await Job.find({}).select('jobRequirements');
+    const jobRequirements = jobs.map(job => job.jobRequirements).flat();
+    return jobRequirements; // Return the data instead of sending a response
+  } catch (error) {
+    console.error("Error in fetching jobs: ", error.message);
+    throw new Error("Server error");
+  }
+};
+
+//blm testing
+const getUserSkills = async (userId) => {
+  try {
+    const user = await UserDetail.findOne({ userId: userId }).select('skills');
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const skillsString = user.skills.join(', ');
+    return skillsString;
+  } catch (error) {
+    console.error("Error in fetching user skills: ", error.message);
+    throw new Error("Server error");
+  }
+};
+
+export const getRecommendedJobs = async (req, res) => {
+  const { id } = req.params;
+
+  const jobRequirements = await getAllJobRequirements();
+  const userSkills = await getUserSkills(id);
+  try {
+    const response = await axios.post('http://localhost:5000/recommend_jobs', {
+      user_skills: userSkills,
+      job_openings: jobRequirements
+    });
+
+    console.log('Response from recommendation API:', response.data);
+
+    res.status(200).json({
+      success: true,
+      recommendationResult: response.data,
+    });
+  } catch (error) {
+    console.error('Error sending recommendation request:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error communicating with recommendation service',
+    });
   }
 };

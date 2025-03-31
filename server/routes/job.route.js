@@ -7,13 +7,16 @@ import {
   getJobById,
   getJobsWithCompany,
   getJobByIdWithCompany,
-  getJobsByCompany
+  getJobsByCompany,
+  getRecommendedJobs
 } from "../controllers/job.controller.js";
 import { protect } from "../middleware/protect.js";
 
 const router = express.Router();
 
 router.get("/", getJobs);
+router.get("/recommended-jobs/:id", getRecommendedJobs);
+// router.get("/job-requirements", getAllJobRequirements);
 
 router.get("/companies", getJobsWithCompany);
 router.get("/company/:id", getJobsByCompany);
