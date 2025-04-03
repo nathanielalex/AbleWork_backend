@@ -6,6 +6,7 @@ import jobRoutes from "./routes/job.route.js";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import userDetailRoutes from "./routes/userDetail.route.js";
+import saveJobRoutes from "./routes/saveJob.route.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/userDetail", userDetailRoutes);
+app.use("/api/saveJob", saveJobRoutes);
 
 app.listen(PORT, () => {
   connectDB();
