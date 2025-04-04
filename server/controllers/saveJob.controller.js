@@ -5,22 +5,36 @@ export const saveJob = async (req, res) => {
   try {
     const { userId, jobId } = req.body;
 
-    // Cek apakah userId dan jobId sudah ada di database
-    const existingSave = await SaveJob.findOne({ userId, jobId });
-    if (existingSave) {
+    // Validasi input
+    if (!userId || !jobId) {
       return res.status(400).json({
         success: false,
-        message: "User already saved this job.",
+        message: "userId and jobId are required.",
       });
     }
 
-    // Jika belum ada, buat entry baru
-    const newSave = new SaveJob({ userId, jobId, savedAt: new Date() });
-    await newSave.save();
+    // Cek apakah userId dan jobId sudah ada di database
+    const existingSave = await SaveJob.findOne({ userId, jobId });
 
-    res.status(201).json({ success: true, data: newSave });
+    if (existingSave) {
+      // Jika sudah ada, hapus dari koleksi
+      await SaveJob.findByIdAndDelete(existingSave._id);
+      return res.status(200).json({
+        success: true,
+        message: "Job removed from saved jobs.",
+      });
+    } else {
+      // Jika belum ada, tambahkan ke koleksi
+      const newSave = new SaveJob({ userId, jobId, savedAt: new Date() });
+      await newSave.save();
+      return res.status(201).json({
+        success: true,
+        message: "Job saved successfully.",
+        data: newSave,
+      });
+    }
   } catch (error) {
-    console.error("Error saving job:", error);
+    console.error("Error toggling save job:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
