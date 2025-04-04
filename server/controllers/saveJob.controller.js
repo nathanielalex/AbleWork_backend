@@ -55,6 +55,15 @@ export const getSaveJobs = async (req, res) => {
       },
       { $unwind: "$job" },
       {
+        $lookup: {
+          from: "companies",
+          localField: "job.companyId",
+          foreignField: "_id",
+          as: "job.companyDetails",
+        },
+      },
+      { $unwind: "$job.companyDetails" },
+      {
         $project: {
           _id: 1,
           job: 1,
