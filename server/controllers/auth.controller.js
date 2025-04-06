@@ -58,7 +58,7 @@ export const registerUser = async (req, res) => {
     const userDetail = new UserDetail({
       userId: newUser._id,
       skills: [],
-      CV: 'CV not provided',
+      CV: "CV not provided",
     });
 
     await userDetail.save();
@@ -112,7 +112,7 @@ export const registerCompany = async (req, res) => {
       industryType,
       companyWebsite,
       password,
-      companyPicture
+      companyPicture,
     } = req.body;
 
     if (
@@ -144,7 +144,7 @@ export const registerCompany = async (req, res) => {
       industryType,
       companyWebsite,
       password,
-      companyPicture
+      companyPicture,
     });
 
     await newCompany.save();
@@ -193,21 +193,47 @@ export const changePassword = async (req, res) => {
   try {
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
+      return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     user.password = newPassword; //will automatically hash
 
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully' });
+    res.status(200).json({ message: "Password updated successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
+
+export const changePasswordCompany = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const { id } = req.params;
+
+  try {
+    const company = await Company.findById(id);
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
+    }
+
+    const isMatch = await company.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    company.password = newPassword; //will automatically hash
+
+    await company.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -9,7 +9,9 @@ import {
   getJobByIdWithCompany,
   getJobsByCompany,
   getRecommendedJobs,
-  getJobsById
+  getJobsById,
+  duplicateJob,
+  getJobsWithApplicants,
 } from "../controllers/job.controller.js";
 import { protect } from "../middleware/protect.js";
 
@@ -27,15 +29,15 @@ router.get("/company/:id", getJobsByCompany);
 router.get("/:id", getJobById);
 router.post("/multiple", getJobsById);
 router.get("/companies/:id", getJobByIdWithCompany);
+router.get("/with-applicants/:companyId", getJobsWithApplicants);
 
 router.post("/", createJob);
+router.delete("/:id", deleteJob);
+router.put("/:id", updateJob);
+router.post("/duplicate/:id", duplicateJob);
 
 // router.post("/", protect, (req, res) => {
 //   createJob(req, res);
 // });
-
-router.delete("/:id", deleteJob);
-
-router.put("/:id", updateJob);
 
 export default router;

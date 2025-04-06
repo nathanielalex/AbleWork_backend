@@ -4,7 +4,8 @@ import {
   loginUser,
   registerCompany,
   loginCompany,
-  changePassword
+  changePassword,
+  changePasswordCompany,
 } from "../controllers/auth.controller.js";
 
 const router = express.Router();
@@ -18,5 +19,7 @@ router.post("/register-company", registerCompany);
 router.post("/login-company", loginCompany);
 
 router.put("/change-password/:id", changePassword);
+
+router.put("/change-password-company/:id", changePasswordCompany);
 
 export default router;

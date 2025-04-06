@@ -110,6 +110,51 @@ export const getApplicationsByCompanyId = async (req, res) => {
   }
 };
 
+// GET /applications/job/:jobId
+export const getApplicationsByJobId = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+
+    const applications = await Application.aggregate([
+      {
+        // Join with ApplicationStatuses
+        $lookup: {
+          from: "applicationstatuses",
+          localField: "_id",
+          foreignField: "applicationId",
+          as: "applicationStatuses",
+        },
+      },
+      {
+        // Join with Job to get job details
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "job",
+        },
+      },
+      {
+        // Unwind the job to get a clean object instead of an array
+        $unwind: "$job",
+      },
+      {
+        // Match applications related to the provided jobId
+        $match: { jobId: new mongoose.Types.ObjectId(jobId) },
+      },
+      {
+        // Sort by application date (optional, change according to need)
+        $sort: { applicationDate: -1 },
+      },
+    ]);
+
+    res.json(applications);
+  } catch (err) {
+    console.error("getApplicationsByJobId error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // POST /applications/:applicationId/status
 export const updateApplicationStatus = async (req, res) => {
   try {

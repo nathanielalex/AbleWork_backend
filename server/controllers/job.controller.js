@@ -21,17 +21,17 @@ export const getJobsWithCompany = async (req, res) => {
           from: "companies",
           localField: "companyId",
           foreignField: "_id",
-          as: "companyDetails"
-        }
+          as: "companyDetails",
+        },
       },
       {
-        $unwind: "$companyDetails"
+        $unwind: "$companyDetails",
       },
       {
         $project: {
-          "companyDetails.password": 0  //exclude password
-        }
-      }
+          "companyDetails.password": 0, //exclude password
+        },
+      },
     ]);
     res.json(jobsWithCompanies);
   } catch (error) {
@@ -48,31 +48,31 @@ export const getJobByIdWithCompany = async (req, res) => {
     }
     const jobWithCompany = await Job.aggregate([
       {
-        $match: { _id: jobId }
+        $match: { _id: jobId },
       },
       {
         $lookup: {
           from: "companies",
           localField: "companyId",
           foreignField: "_id",
-          as: "companyDetails"
-        }
+          as: "companyDetails",
+        },
       },
       {
-        $unwind: "$companyDetails"
+        $unwind: "$companyDetails",
       },
       {
         $project: {
-          "companyDetails.password": 0
-        }
-      }
+          "companyDetails.password": 0,
+        },
+      },
     ]);
 
     if (jobWithCompany.length === 0) {
       return res.status(404).json({ error: "Job not found" });
     }
 
-    res.json(jobWithCompany[0]); 
+    res.json(jobWithCompany[0]);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -84,29 +84,29 @@ export const getJobsByCompany = async (req, res) => {
     // console.log(jobId)
     const companyId = req.params.id; //as url parameter
     const mongoId = new mongoose.Types.ObjectId(companyId);
-    
+
     const jobsWithCompanies = await Job.aggregate([
       {
         $match: {
-          companyId: mongoId
-        }
+          companyId: mongoId,
+        },
       },
       {
         $lookup: {
           from: "companies",
           localField: "companyId",
           foreignField: "_id",
-          as: "companyDetails"
-        }
+          as: "companyDetails",
+        },
       },
       {
-        $unwind: "$companyDetails"
+        $unwind: "$companyDetails",
       },
       {
         $project: {
-          "companyDetails.password": 0  // Exclude password
-        }
-      }
+          "companyDetails.password": 0, // Exclude password
+        },
+      },
     ]);
 
     res.json(jobsWithCompanies);
@@ -114,7 +114,6 @@ export const getJobsByCompany = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // export const getCurrentJobs = async (req, res) => {
 //   try {
@@ -152,7 +151,7 @@ export const createJob = async (req, res) => {
     !job.jobDescription ||
     !job.jobRequirements ||
     !job.jobType ||
-    !job.disabilitiesFriendly ||
+    !job.experienceLevel ||
     !job.companyId
   ) {
     return res
@@ -204,12 +203,95 @@ export const deleteJob = async (req, res) => {
   }
 };
 
+export const duplicateJob = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, message: "Job not found" });
+  }
+
+  try {
+    const job = await Job.findById(id);
+
+    if (!job) {
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    const duplicatedJob = new Job({
+      ...job.toObject(),
+      _id: undefined,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    // Simpan job yang diduplikasi
+    await duplicatedJob.save();
+
+    res.status(201).json({ success: true, data: duplicatedJob });
+  } catch (error) {
+    console.error("Error in duplicating job: ", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getJobsWithApplicants = async (req, res) => {
+  try {
+    const companyId = req.params.companyId;
+
+    const jobsWithApplicants = await Job.aggregate([
+      {
+        // Match jobs by companyId
+        $match: {
+          companyId: new mongoose.Types.ObjectId(companyId),
+        },
+      },
+      {
+        // Join with Applications collection to find jobs that have applicants
+        $lookup: {
+          from: "applications",
+          localField: "_id",
+          foreignField: "jobId",
+          as: "applications",
+        },
+      },
+      // {
+      //   // Filter jobs that have at least one applicant (applications array is not empty)
+      //   $match: {
+      //     "applications.0": { $exists: true },
+      //   },
+      // },
+      {
+        // Join with Companies to get company details for each job
+        $lookup: {
+          from: "companies",
+          localField: "companyId",
+          foreignField: "_id",
+          as: "company",
+        },
+      },
+      {
+        // Unwind the company array to make it an object
+        $unwind: "$company",
+      },
+      {
+        // Optionally, sort the jobs by application date (descending)
+        $sort: { "applications.applicationDate": -1 },
+      },
+    ]);
+
+    res.json(jobsWithApplicants);
+  } catch (err) {
+    console.error("getJobsWithApplicants error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 const getAllJobRequirements = async () => {
   try {
-    const jobs = await Job.find({}).select('_id jobRequirements');
-    const jobDetails = jobs.map(job => ({
-      job_id: job._id, 
-      requirement: job.jobRequirements
+    const jobs = await Job.find({}).select("_id jobRequirements");
+    const jobDetails = jobs.map((job) => ({
+      job_id: job._id,
+      requirement: job.jobRequirements,
     }));
     return jobDetails;
   } catch (error) {
@@ -218,14 +300,13 @@ const getAllJobRequirements = async () => {
   }
 };
 
-
 const getUserSkills = async (userId) => {
   try {
-    const user = await UserDetail.findOne({ userId: userId }).select('skills');
+    const user = await UserDetail.findOne({ userId: userId }).select("skills");
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
-    const skillsString = user.skills.join(', ');
+    const skillsString = user.skills.join(", ");
     return skillsString;
   } catch (error) {
     console.error("Error in fetching user skills: ", error.message);
@@ -239,22 +320,22 @@ export const getRecommendedJobs = async (req, res) => {
   const jobRequirements = await getAllJobRequirements();
   const userSkills = await getUserSkills(id);
   try {
-    const response = await axios.post('http://localhost:5000/recommend_jobs', {
+    const response = await axios.post("http://localhost:5000/recommend_jobs", {
       user_skills: userSkills,
-      job_openings: jobRequirements
+      job_openings: jobRequirements,
     });
 
-    console.log('Response from recommendation API:', response.data);
+    console.log("Response from recommendation API:", response.data);
 
     res.status(200).json({
       success: true,
       recommendationResult: response.data,
     });
   } catch (error) {
-    console.error('Error sending recommendation request:', error);
+    console.error("Error sending recommendation request:", error);
     res.status(500).json({
       success: false,
-      message: 'Error communicating with recommendation service',
+      message: "Error communicating with recommendation service",
     });
   }
 };
@@ -262,16 +343,22 @@ export const getRecommendedJobs = async (req, res) => {
 export const getJobsById = async (req, res) => {
   try {
     //list of ids
-    const jobIds = req.body.jobIds
+    const jobIds = req.body.jobIds;
 
     if (!Array.isArray(jobIds) || jobIds.length === 0) {
-      return res.status(400).json({ success: false, message: "Please provide a valid list of jobIds." });
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid list of jobIds.",
+      });
     }
 
     const jobs = await Job.find({ _id: { $in: jobIds } });
 
     if (jobs.length === 0) {
-      return res.status(404).json({ success: false, message: "No jobs found for the given jobIds." });
+      return res.status(404).json({
+        success: false,
+        message: "No jobs found for the given jobIds.",
+      });
     }
 
     res.status(200).json({ success: true, data: jobs });
@@ -280,4 +367,3 @@ export const getJobsById = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
