@@ -130,6 +130,7 @@ export const updateApplicationStatus = async (req, res) => {
     // Update statusLabel terakhir ke table Application
     await Application.findByIdAndUpdate(applicationId, {
       status: statusLabel,
+      updatedAt: new Date(),
     });
 
     res.status(201).json({ message: "Status updated", status: newStatus });

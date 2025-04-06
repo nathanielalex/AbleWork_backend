@@ -6,6 +6,7 @@ const applicationSchema = new mongoose.Schema({
   applicationDate: { type: Date, default: Date.now },
   status: { type: String, default: "Applied" },
   cv: { type: String, required: false },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const Application = mongoose.model("Application", applicationSchema);

@@ -30,6 +30,10 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  experienceLevel: {
+    type: String,
+    default: "Entry Level",
+  },
   disabilitiesFriendly: {
     type: Boolean,
     default: false,
