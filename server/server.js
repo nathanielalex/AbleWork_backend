@@ -9,6 +9,7 @@ import companyRoutes from "./routes/company.route.js";
 import userDetailRoutes from "./routes/userDetail.route.js";
 import saveJobRoutes from "./routes/saveJob.route.js";
 import applicationRoutes from "./routes/application.route.js";
+import messageRoutes from "./routes/message.route.js";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/userDetail", userDetailRoutes);
 app.use("/api/saveJob", saveJobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/message", messageRoutes);
 
 app.listen(PORT, () => {
   connectDB();
