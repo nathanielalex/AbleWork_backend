@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getApplicationById,
   getApplicationsByUserId,
   updateApplicationStatus,
   createApplication,
@@ -9,6 +10,7 @@ import {
 
 const router = express.Router();
 
+router.get("/:applicationId", getApplicationById);
 router.get("/user/:userId", getApplicationsByUserId);
 router.get("/job/:jobId", getApplicationsByJobId);
 router.get("/company/:companyId", getApplicationsByCompanyId);
