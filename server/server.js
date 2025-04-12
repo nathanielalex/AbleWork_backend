@@ -10,6 +10,7 @@ import userDetailRoutes from "./routes/userDetail.route.js";
 import saveJobRoutes from "./routes/saveJob.route.js";
 import applicationRoutes from "./routes/application.route.js";
 import messageRoutes from "./routes/message.route.js";
+import chatRoutes from "./routes/chatbot.route.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 const corsOption = {
   origin: ["http://localhost:5173"],
+  credentials: true,
   //5173 is where vite runs
 };
 
@@ -35,6 +37,8 @@ app.use("/api/userDetail", userDetailRoutes);
 app.use("/api/saveJob", saveJobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/message", messageRoutes);
+
+app.use('/api/chat', chatRoutes);
 
 app.listen(PORT, () => {
   connectDB();
