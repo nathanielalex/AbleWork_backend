@@ -2,9 +2,9 @@ import axios from "axios";
 
 const HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1";
 const FALLBACK_RESPONSES = [
-  "Maaf, saya tidak bisa menjawab sekarang. Coba lagi nanti ya.",
-  "AbleBot sedang istirahat sebentar. Coba kirim ulang pertanyaannya.",
-  "Sepertinya server sedang sibuk. Silakan ulangi dalam beberapa saat.",
+  "Sorry, please try again.",
+  "AbleBot API Token expired...",
+  "Server is busy right now... please try again later.",
 ];
 
 export const handleChatbotMessage = async (req, res) => {
