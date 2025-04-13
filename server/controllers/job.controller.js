@@ -325,12 +325,66 @@ export const getRecommendedJobs = async (req, res) => {
       job_openings: jobRequirements,
     });
 
-    console.log("Response from recommendation API:", response.data);
+    // console.log("Response from recommendation API:", response.data);
+    const recommendedJobs  = response.data.recommended_jobs;
 
-    res.status(200).json({
-      success: true,
-      recommendationResult: response.data,
+    if (!Array.isArray(recommendedJobs) || recommendedJobs.length === 0) {
+      return res.status(400).json({ error: "no recommended jobs" });
+    }
+
+    const validJobMap = recommendedJobs.reduce((acc, job) => {
+      if (mongoose.Types.ObjectId.isValid(job.job_id)) {
+        acc[job.job_id] = { requirement: job.requirement, similarity: job.similarity };
+      }
+      return acc;
+    }, {});
+
+    const validObjectIds = Object.keys(validJobMap).map(id => new mongoose.Types.ObjectId(id));
+
+    if (validObjectIds.length === 0) {
+      return res.status(400).json({ error: "No valid job_ids provided" });
+    }
+
+    const jobsWithCompanies = await Job.aggregate([
+      {
+        $match: { _id: { $in: validObjectIds } },
+      },
+      {
+        $lookup: {
+          from: "companies",
+          localField: "companyId",
+          foreignField: "_id",
+          as: "companyDetails",
+        },
+      },
+      {
+        $unwind: "$companyDetails",
+      },
+      {
+        $project: {
+          "companyDetails.password": 0,
+        },
+      },
+    ]);
+
+    if (jobsWithCompanies.length === 0) {
+      return res.status(404).json({ error: "No jobs found for the provided IDs" });
+    }
+
+    const jobsWithSimilarity = jobsWithCompanies.map(job => {
+      const jobData = validJobMap[job._id.toString()];
+      return {
+        ...job,
+        similarity: jobData.similarity,
+      };
     });
+    
+    res.json(jobsWithSimilarity);
+
+    // res.status(200).json({
+    //   success: true,
+    //   recommendationResult: response.data,
+    // });
   } catch (error) {
     console.error("Error sending recommendation request:", error);
     res.status(500).json({
