@@ -32,7 +32,7 @@ Follow these steps to set up the project locally:
    AI_API=http://localhost:5000/
    ```
 
-   - Replace `aaaa` with the appropriate values:
+   - Replace with the appropriate values:
      - `MONGO_URI`: Your MongoDB connection string (e.g., from MongoDB Atlas or your local MongoDB instance).
      - `JWT_SECRET`: A secret key used to sign and verify JWT tokens (use a secure random string).
      - `HUGGINGFACE_API_KEY`: Your Hugging Face API key.
@@ -60,14 +60,3 @@ This project relies on a MongoDB database for data storage. Ensure that your dat
   ```bash
   npm run dev
   ```
-
-## Additional Configuration
-
-You might need to set up additional services such as Hugging Face, AI APIs, or any other integrations your application depends on. Follow the respective service's setup guides for API keys and configurations.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-This update includes the new environment variables (`MONGO_URI`, `JWT_SECRET`, `HUGGINGFACE_API_KEY`, `PORT`, and `AI_API`). Let me know if you need further modifications!
