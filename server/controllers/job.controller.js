@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import Job from "../models/job.model.js";
 import UserDetail from "../models/userDetail.model.js";
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const getJobs = async (req, res) => {
   try {
@@ -320,7 +323,7 @@ export const getRecommendedJobs = async (req, res) => {
   const jobRequirements = await getAllJobRequirements();
   const userSkills = await getUserSkills(id);
   try {
-    const response = await axios.post("https://ablework-ai-production.up.railway.app/recommend_jobs", {
+    const response = await axios.post(`${process.env.AI_API}recommend_jobs`, {
       user_skills: userSkills,
       job_openings: jobRequirements,
     });
