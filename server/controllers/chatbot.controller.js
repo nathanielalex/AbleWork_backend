@@ -27,9 +27,8 @@ export const handleChatbotMessage = async (req, res) => {
     );
   
     console.log("✅ HuggingFace Raw Response:", response.data);
-    console.log("🔐 HF_API_KEY:", process.env.HUGGINGFACE_API_KEY);
+    // console.log("🔐 HF_API_KEY:", process.env.HUGGINGFACE_API_KEY);
   
-    // Optional: Handle when response is an object with estimated_time
     if (response.data?.error) {
       console.error("❌ API returned error:", response.data.error);
     }
