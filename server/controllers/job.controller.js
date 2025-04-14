@@ -320,7 +320,7 @@ export const getRecommendedJobs = async (req, res) => {
   const jobRequirements = await getAllJobRequirements();
   const userSkills = await getUserSkills(id);
   try {
-    const response = await axios.post("http://localhost:5000/recommend_jobs", {
+    const response = await axios.post("https://ablework-ai-production.up.railway.app/recommend_jobs", {
       user_skills: userSkills,
       job_openings: jobRequirements,
     });
