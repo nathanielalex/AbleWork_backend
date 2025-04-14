@@ -323,7 +323,6 @@ export const getRecommendedJobs = async (req, res) => {
   const jobRequirements = await getAllJobRequirements();
   const userSkills = await getUserSkills(id);
   try {
-    console.log(`${process.env.AI_API}recommend_jobs`)
     const response = await axios.post(`${process.env.AI_API}recommend_jobs`, {
       user_skills: userSkills,
       job_openings: jobRequirements,
