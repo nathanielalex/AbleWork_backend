@@ -1,6 +1,6 @@
 # AbleWork - Backend
 
-This is the backend of the AbleWork application. It is designed to handle various API requests and manage the database interactions. Follow the steps below to get started with the project.
+This is the backend of the AbleWork application. It is designed to handle various API requests and manage database interactions. Follow the steps below to get started with the project.
 
 ## Prerequisites
 
@@ -21,16 +21,23 @@ Follow these steps to set up the project locally:
    ```
 
 2. **Create a `.env` file**:
-   Create a `.env` file in the root directory of the project to store sensitive information like your MongoDB connection string and JWT secret.
+   Create a `.env` file in the root directory of the project to store sensitive information like your MongoDB connection string, JWT secret, and other configuration details.
 
    Example `.env` file:
    ```
-   MONGO_URL=mongodb://your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
+   MONGO_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   HUGGINGFACE_API_KEY=your_huggingface_api_key_here
+   PORT=8080
+   AI_API=http://localhost:5000/
    ```
 
-   - Replace `your_mongodb_connection_string` with your MongoDB connection URL (e.g., from MongoDB Atlas or your local database).
-   - Replace `your_jwt_secret_key` with a secret key used to sign and verify JWT tokens. You can generate one using a secure random string.
+   - Replace `aaaa` with the appropriate values:
+     - `MONGO_URI`: Your MongoDB connection string (e.g., from MongoDB Atlas or your local MongoDB instance).
+     - `JWT_SECRET`: A secret key used to sign and verify JWT tokens (use a secure random string).
+     - `HUGGINGFACE_API_KEY`: Your Hugging Face API key.
+     - `PORT`: The port on which your backend will run (default is `8080`).
+     - `AI_API`: The URL to AI API (default is `http://localhost:5000/`).
 
 3. **Start the server**:
    Once the dependencies are installed and your `.env` file is set up, run the following command to start the server:
@@ -38,7 +45,7 @@ Follow these steps to set up the project locally:
    npm run dev
    ```
 
-   The server will now be running on `http://localhost:5000` (or another port if specified in your `.env` file or configuration).
+   The server will now be running on `http://localhost:8080` (or another port if specified in your `.env` file or configuration).
 
 ## MongoDB Database
 
@@ -53,3 +60,14 @@ This project relies on a MongoDB database for data storage. Ensure that your dat
   ```bash
   npm run dev
   ```
+
+## Additional Configuration
+
+You might need to set up additional services such as Hugging Face, AI APIs, or any other integrations your application depends on. Follow the respective service's setup guides for API keys and configurations.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
+
+This update includes the new environment variables (`MONGO_URI`, `JWT_SECRET`, `HUGGINGFACE_API_KEY`, `PORT`, and `AI_API`). Let me know if you need further modifications!
