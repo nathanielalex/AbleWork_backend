@@ -42,9 +42,15 @@ app.use("/api/message", messageRoutes);
 
 app.use('/api/chat', chatRoutes);
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log("server started on port 8080");
+connectDB().then(() => {
+  // Once the database connection is successful, start the server
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}).catch(err => {
+  console.error('Error connecting to database:', err);
+  process.exit(1);  // Exit the process if the database connection fails
 });
 
 export default app;
