@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const apiKeyAI = process.env.AI_API || "http://localhost:5000/";
+
 // COMMENT: This function fetches all jobs from the database and returns them in the response.
 
 export const getJobs = async (req, res) => {
@@ -313,7 +315,7 @@ export const getRecommendedJobs = async (req, res) => {
   const jobRequirements = await getAllJobRequirements();
   const userSkills = await getUserSkills(id);
   try {
-    const response = await axios.post(`${process.env.AI_API}recommend_jobs`, {
+    const response = await axios.post(`${apiKeyAI}recommend_jobs`, {
       user_skills: userSkills,
       job_openings: jobRequirements,
     });
