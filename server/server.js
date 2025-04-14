@@ -29,6 +29,8 @@ const corsOption = {
 
 app.use(cors(corsOption));
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
 app.use("/api/jobs", jobRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -40,7 +42,9 @@ app.use("/api/message", messageRoutes);
 
 app.use('/api/chat', chatRoutes);
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log("server started on port 8080");
-});
+// app.listen(PORT, () => {
+//   connectDB();
+//   console.log("server started on port 8080");
+// });
+
+export default app;
