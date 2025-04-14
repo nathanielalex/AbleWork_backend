@@ -21,7 +21,7 @@ app.use(express.json());
 
 // COMMENT: This middleware is used to parse incoming requests with JSON payloads.
 const corsOption = {
-  origin: ["https://ablework.vercel.app"],
+  origin: ["https://ablework.vercel.app", "http://localhost:5173"],
   credentials: true,
 };
 
