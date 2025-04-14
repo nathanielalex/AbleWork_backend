@@ -51,7 +51,7 @@ connectDB()
   })
   .catch((err) => {
     console.error("Error connecting to database:", err);
-    process.exit(1); // Exit the process if the database connection fails
+    process.exit(1);
   });
 
 export default app;
