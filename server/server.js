@@ -40,7 +40,6 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/chat", chatRoutes);
 
-// COMMENT: This is where the database connection is established and the server starts listening on the specified port.
 connectDB()
   .then(() => {
     // Once the database connection is successful, start the server
@@ -51,7 +50,7 @@ connectDB()
   })
   .catch((err) => {
     console.error("Error connecting to database:", err);
-    process.exit(1); // Exit the process if the database connection fails
+    process.exit(1);
   });
 
 export default app;
