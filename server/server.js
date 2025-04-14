@@ -15,7 +15,7 @@ import chatRoutes from "./routes/chatbot.route.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 // console.log(process.env.MONGO_URI)
 
