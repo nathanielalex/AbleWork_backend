@@ -22,7 +22,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 
 const corsOption = {
-  origin: ["http://localhost:5173"],
+  origin: ["https://ablework.vercel.app/"],
   credentials: true,
   //5173 is where vite runs
 };
@@ -43,11 +43,7 @@ app.use("/api/message", messageRoutes);
 app.use('/api/chat', chatRoutes);
 
 connectDB().then(() => {
-  // Once the database connection is successful, start the server
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  console.log('Database connected');
 }).catch(err => {
   console.error('Error connecting to database:', err);
   process.exit(1);  // Exit the process if the database connection fails
