@@ -22,9 +22,8 @@ const PORT = process.env.PORT;
 app.use(express.json());
 
 const corsOption = {
-  origin: ["https://ablework.vercel.app/"],
+  origin: ["https://ablework.vercel.app"],
   credentials: true,
-  //5173 is where vite runs
 };
 
 app.use(cors(corsOption));
