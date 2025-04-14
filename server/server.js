@@ -21,7 +21,7 @@ app.use(express.json());
 
 // COMMENT: This middleware is used to parse incoming requests with JSON payloads.
 const corsOption = {
-  origin: ["https://ablework.vercel.app"],
+  origin: ["https://ablework.vercel.app", "http://localhost:5173"],
   credentials: true,
 };
 
@@ -40,6 +40,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/chat", chatRoutes);
 
+// COMMENT: This is where the database connection is established and the server starts listening on the specified port.
 connectDB()
   .then(() => {
     // Once the database connection is successful, start the server
