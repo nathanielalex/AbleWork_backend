@@ -42,9 +42,9 @@ app.use("/api/message", messageRoutes);
 
 app.use('/api/chat', chatRoutes);
 
-// app.listen(PORT, () => {
-//   connectDB();
-//   console.log("server started on port 8080");
-// });
+app.listen(PORT, () => {
+  connectDB();
+  console.log("server started on port 8080");
+});
 
 export default app;
