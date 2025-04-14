@@ -17,10 +17,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-// console.log(process.env.MONGO_URI)
-
 app.use(express.json());
 
+// COMMENT: This middleware is used to parse incoming requests with JSON payloads.
 const corsOption = {
   origin: ["https://ablework.vercel.app"],
   credentials: true,
@@ -30,6 +29,7 @@ app.use(cors(corsOption));
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
+// COMMENT: This is where all the routes are defined and linked to their respective controllers.
 app.use("/api/jobs", jobRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -38,18 +38,20 @@ app.use("/api/userDetail", userDetailRoutes);
 app.use("/api/saveJob", saveJobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/chat", chatRoutes);
 
-app.use('/api/chat', chatRoutes);
-
-connectDB().then(() => {
-  // Once the database connection is successful, start the server
-  const PORT = process.env.PORT;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// COMMENT: This is where the database connection is established and the server starts listening on the specified port.
+connectDB()
+  .then(() => {
+    // Once the database connection is successful, start the server
+    const PORT = process.env.PORT;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Error connecting to database:", err);
+    process.exit(1); // Exit the process if the database connection fails
   });
-}).catch(err => {
-  console.error('Error connecting to database:', err);
-  process.exit(1);  // Exit the process if the database connection fails
-});
 
 export default app;

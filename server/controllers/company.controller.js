@@ -1,5 +1,7 @@
 import Company from "../models/company.model.js";
 
+// COMMENT: This function handles company-related operations such as updating, retrieving, and deleting companies.
+
 export const updateCompany = async (req, res) => {
   try {
     const { companyId } = req.params;

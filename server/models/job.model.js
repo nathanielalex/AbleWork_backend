@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// COMMENT: This schema defines the structure of the "job" collection in the database.
 const jobSchema = new mongoose.Schema({
   companyId: {
     type: mongoose.Schema.Types.ObjectId,

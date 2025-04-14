@@ -6,6 +6,8 @@ import UserPreference, {
 } from "../models/userPreference.model.js";
 import { isValidArrayValues } from "../utils/utils.js";
 
+// COMMENT: This file handles user-related operations such as creating, updating, and deleting users and their preferences.
+
 export const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;

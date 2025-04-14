@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+
+// COMMENT: This schema defines the structure of the "company" collection in the database.
 const companySchema = new mongoose.Schema({
   companyName: {
     type: String,

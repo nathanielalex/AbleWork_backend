@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// COMMENT: This middleware function protects routes to ensure that only authenticated users can access them.
 export const protect = (req, res, next) => {
   // Get token from Authorization header
   const token = req.header("Authorization")?.replace("Bearer ", "");
@@ -17,4 +18,3 @@ export const protect = (req, res, next) => {
     return res.status(401).json({ message: "Token is not valid" });
   }
 };
-

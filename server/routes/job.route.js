@@ -17,14 +17,12 @@ import { protect } from "../middleware/protect.js";
 
 const router = express.Router();
 
+// COMMENT: This router handles all the routes related to jobs.
 router.get("/", getJobs);
 router.get("/recommended-jobs/:id", getRecommendedJobs);
-// router.get("/job-requirements", getAllJobRequirements);
 
 router.get("/companies", getJobsWithCompany);
 router.get("/company/:id", getJobsByCompany);
-
-// router.get("/current", getCurrentJobs);
 
 router.get("/:id", getJobById);
 router.post("/multiple", getJobsById);

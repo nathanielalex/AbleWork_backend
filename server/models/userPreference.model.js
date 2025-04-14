@@ -1,6 +1,6 @@
-// models/UserPreference.ts
 import mongoose from "mongoose";
 
+// COMMENT: This schema defines the structure of the "userPreference" collection in the database.
 const VALID_JOB_TYPES = [
   "Full-time",
   "Part-time",

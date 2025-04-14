@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// COMMENT: This schema defines the structure of the "applicationStatus" collection in the database.
 const applicationStatusSchema = new mongoose.Schema({
   applicationId: {
     type: mongoose.Schema.Types.ObjectId,

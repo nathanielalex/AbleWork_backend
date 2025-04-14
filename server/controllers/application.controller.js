@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import Application from "../models/application.model.js";
 import ApplicationStatus from "../models/applicationStatus.model.js";
 
+// COMMENT: This controller handles the application-related operations such as creating, updating, and retrieving applications.
+
 // GET /applications/:applicationId
 export const getApplicationById = async (req, res) => {
   try {

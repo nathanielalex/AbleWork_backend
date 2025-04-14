@@ -1,8 +1,9 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import Company from "../models/company.model.js";
-import bcrypt from "bcryptjs";
 import UserDetail from "../models/userDetail.model.js";
+
+// COMMENT: This function handles user login and registration.
 
 export const registerUser = async (req, res) => {
   try {

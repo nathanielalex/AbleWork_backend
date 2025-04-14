@@ -8,8 +8,10 @@ import {
 
 const router = express.Router();
 
+// COMMENT: This router handles all the routes related to messages.
 router.get("/search", searchUsersAndCompanies);
 router.post("/send", sendMessage);
+
 router.get("/conversation/:userId1/:userId2", getConversation);
 router.get("/participants/:currentId", getMessageParticipants);
 

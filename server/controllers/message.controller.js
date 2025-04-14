@@ -2,6 +2,8 @@ import User from "../models/user.model.js";
 import Company from "../models/company.model.js";
 import Message from "../models/message.model.js";
 
+// COMMENT: This file handles message-related operations such as sending messages, retrieving conversations, and searching for users and companies.
+
 export const searchUsersAndCompanies = async (req, res) => {
   const query = req.query.q;
   const currentId = req.query.currentId;

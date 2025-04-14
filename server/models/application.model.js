@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// COMMENT: This schema defines the structure of the "application" collection in the database.
 const applicationSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },

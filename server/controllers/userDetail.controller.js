@@ -1,20 +1,23 @@
-import UserDetail from '../models/userDetail.model.js';
-import mongoose from "mongoose";
+import UserDetail from "../models/userDetail.model.js";
+
+// COMMENT: This controller handles user detail-related operations such as creating, updating, and retrieving user details.
 
 export const getUserDetails = async (req, res) => {
   try {
-    const { userId } = req.params; 
+    const { userId } = req.params;
 
-    const userDetail = await UserDetail.findOne({ userId: userId }).populate('userId'); 
+    const userDetail = await UserDetail.findOne({ userId: userId }).populate(
+      "userId"
+    );
 
     if (!userDetail) {
-      return res.status(404).json({ message: 'User detail not found' });
+      return res.status(404).json({ message: "User detail not found" });
     }
 
     return res.status(200).json(userDetail);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -26,7 +29,7 @@ export const updateUserDetails = async (req, res) => {
     const userDetail = await UserDetail.findOne({ userId });
 
     if (!userDetail) {
-      return res.status(404).json({ message: 'User details not found.' });
+      return res.status(404).json({ message: "User details not found." });
     }
 
     if (skills) userDetail.skills = skills;
@@ -34,9 +37,11 @@ export const updateUserDetails = async (req, res) => {
 
     await userDetail.save();
 
-    return res.status(200).json({ message: 'User details updated successfully', userDetail });
+    return res
+      .status(200)
+      .json({ message: "User details updated successfully", userDetail });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error', error });
+    return res.status(500).json({ message: "Server error", error });
   }
 };

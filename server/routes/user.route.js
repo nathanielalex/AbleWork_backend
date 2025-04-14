@@ -11,6 +11,7 @@ import {
 
 const router = express.Router();
 
+// COMMENT: This router handles all the routes related to users.
 router.put("/:userId", updateUser);
 router.get("/:userId", getUserByID);
 router.delete("/:userId", deleteUser);

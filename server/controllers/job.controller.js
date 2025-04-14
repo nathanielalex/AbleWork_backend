@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// COMMENT: This function fetches all jobs from the database and returns them in the response.
+
 export const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find({});
@@ -83,8 +85,6 @@ export const getJobByIdWithCompany = async (req, res) => {
 
 export const getJobsByCompany = async (req, res) => {
   try {
-    // const id = req.params.id; // Get the jobId from request parameters
-    // console.log(jobId)
     const companyId = req.params.id; //as url parameter
     const mongoId = new mongoose.Types.ObjectId(companyId);
 
@@ -117,16 +117,6 @@ export const getJobsByCompany = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-// export const getCurrentJobs = async (req, res) => {
-//   try {
-//     const jobs = await Job.find({ isActive: true });
-//     res.status(200).json({ success: true, data: jobs });
-//   } catch (error) {
-//     console.error("Error in fetching jobs: ", error.message);
-//     res.status(500).json({ success: false, message: "Server error" });
-//   }
-// };
 
 export const getJobById = async (req, res) => {
   try {
@@ -329,7 +319,7 @@ export const getRecommendedJobs = async (req, res) => {
     });
 
     // console.log("Response from recommendation API:", response.data);
-    const recommendedJobs  = response.data.recommended_jobs;
+    const recommendedJobs = response.data.recommended_jobs;
 
     if (!Array.isArray(recommendedJobs) || recommendedJobs.length === 0) {
       return res.status(400).json({ error: "no recommended jobs" });
@@ -337,12 +327,17 @@ export const getRecommendedJobs = async (req, res) => {
 
     const validJobMap = recommendedJobs.reduce((acc, job) => {
       if (mongoose.Types.ObjectId.isValid(job.job_id)) {
-        acc[job.job_id] = { requirement: job.requirement, similarity: job.similarity };
+        acc[job.job_id] = {
+          requirement: job.requirement,
+          similarity: job.similarity,
+        };
       }
       return acc;
     }, {});
 
-    const validObjectIds = Object.keys(validJobMap).map(id => new mongoose.Types.ObjectId(id));
+    const validObjectIds = Object.keys(validJobMap).map(
+      (id) => new mongoose.Types.ObjectId(id)
+    );
 
     if (validObjectIds.length === 0) {
       return res.status(400).json({ error: "No valid job_ids provided" });
@@ -371,17 +366,19 @@ export const getRecommendedJobs = async (req, res) => {
     ]);
 
     if (jobsWithCompanies.length === 0) {
-      return res.status(404).json({ error: "No jobs found for the provided IDs" });
+      return res
+        .status(404)
+        .json({ error: "No jobs found for the provided IDs" });
     }
 
-    const jobsWithSimilarity = jobsWithCompanies.map(job => {
+    const jobsWithSimilarity = jobsWithCompanies.map((job) => {
       const jobData = validJobMap[job._id.toString()];
       return {
         ...job,
         similarity: jobData.similarity,
       };
     });
-    
+
     res.json(jobsWithSimilarity);
 
     // res.status(200).json({

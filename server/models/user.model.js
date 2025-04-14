@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+// COMMENT: This schema defines the structure of the "user" collection in the database.
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,

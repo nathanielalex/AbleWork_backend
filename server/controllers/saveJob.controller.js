@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import SaveJob from "../models/saveJob.model.js";
 
+// COMMENT: This controller handles the operations related to saving and retrieving saved jobs.
+
 export const saveJob = async (req, res) => {
   try {
     const { userId, jobId } = req.body;
